@@ -1,0 +1,29 @@
+# $Id: Makefile.in 21587 2006-01-06 18:12:17Z leeh $
+# 
+# Copyright (C) 2005 ircd-ratbox development team
+# This code is in the public domain.
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+
+CFLAGS		= @CFLAGS@
+CPPFLAGS	= @CPPFLAGS@
+LDFLAGS		= @LDFLAGS@
+LIBS		= @LIBS@
+SSL_INCLUDES	= @SSL_INCLUDES@
+SSL_LIBS	= @SSL_LIBS@
+
+CC		= @CC@
+RM		= @RM@
+
+all: build
+
+build: ratbox-respond.c
+	${CC} ${CFLAGS} ${CPPFLAGS} ${SSL_INCLUDES} -o ratbox-respond ratbox-respond.c ${LDFLAGS} ${LIBS} ${SSL_LIBS}
+
+clean:
+	${RM} -f ratbox-respond *~
+
+distclean: clean
+	${RM} -f config.status config.cache config.log setup.h Makefile
