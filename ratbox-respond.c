@@ -247,30 +247,30 @@ main(int argc, char **argv)
 	fclose(kfile);
 
 	while ((ptr = read_challenge(stdin))[0] != '\0') {
-	ndata = base64_decode(ptr, strlen((char *)ptr), &len);
-	if (ndata == NULL)
-	{
-		puts("Error: Bad challenge.");
-		continue;
-	}
+		ndata = base64_decode(ptr, strlen((char *)ptr), &len);
+		if (ndata == NULL)
+		{
+			puts("Error: Bad challenge.");
+			continue;
+		}
 
-	if ((len = RSA_private_decrypt(len, (unsigned char*)ndata,
-		(unsigned char*)ddata, rsa, RSA_PKCS1_OAEP_PADDING)) == -1)
-	{
-		puts("Error: Decryption error.");
-		continue;
-	}
+		if ((len = RSA_private_decrypt(len, (unsigned char*)ndata,
+			(unsigned char*)ddata, rsa, RSA_PKCS1_OAEP_PADDING)) == -1)
+		{
+			puts("Error: Decryption error.");
+			continue;
+		}
 
-	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, (unsigned char *)ddata, len);
-	SHA1_Final((unsigned char *)ddata, &ctx);
-	ndata = base64_encode((unsigned char *)ddata, SHA_DIGEST_LENGTH);
-	if(isatty(fileno(stdin)))
-	{
-		fprintf(stderr, "Response: /quote CHALLENGE +");
-	}
-	puts((char *)ndata);
-	fflush(NULL);
+		SHA1_Init(&ctx);
+		SHA1_Update(&ctx, (unsigned char *)ddata, len);
+		SHA1_Final((unsigned char *)ddata, &ctx);
+		ndata = base64_encode((unsigned char *)ddata, SHA_DIGEST_LENGTH);
+		if(isatty(fileno(stdin)))
+		{
+			fprintf(stderr, "Response: /quote CHALLENGE +");
+		}
+		puts((char *)ndata);
+		fflush(NULL);
 	}
 	return 0;
 }
