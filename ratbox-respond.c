@@ -235,7 +235,7 @@ main(int argc, char **argv)
 		return -1;
 	}
 
-	SSLeay_add_all_ciphers();
+	OpenSSL_add_all_ciphers();
 	rsa = PEM_read_RSAPrivateKey(kfile, NULL,pass_cb, NULL);
 
 	if(!rsa)
@@ -246,19 +246,19 @@ main(int argc, char **argv)
 
 	fclose(kfile);
 
-	ptr = read_challenge(stdin);
+	while ((ptr = read_challenge(stdin))[0] != '\0') {
 	ndata = base64_decode(ptr, strlen((char *)ptr), &len);
 	if (ndata == NULL)
 	{
 		puts("Error: Bad challenge.");
-		return -1;
+		continue;
 	}
 
 	if ((len = RSA_private_decrypt(len, (unsigned char*)ndata,
 		(unsigned char*)ddata, rsa, RSA_PKCS1_OAEP_PADDING)) == -1)
 	{
 		puts("Error: Decryption error.");
-		return -1;
+		continue;
 	}
 
 	SHA1_Init(&ctx);
@@ -271,5 +271,6 @@ main(int argc, char **argv)
 	}
 	puts((char *)ndata);
 	fflush(NULL);
+	}
 	return 0;
 }
