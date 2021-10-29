@@ -267,7 +267,7 @@ main(int argc, char **argv)
 		ndata = base64_encode((unsigned char *)ddata, SHA_DIGEST_LENGTH);
 		if(isatty(fileno(stdin)))
 		{
-			fprintf(stderr, "Response: /quote CHALLENGE +");
+			fprintf(stderr, "/quote CHALLENGE +");
 		}
 		puts((char *)ndata);
 		fflush(NULL);
