@@ -24,6 +24,7 @@ build: ratbox-respond.c
 
 install: ratbox-respond
 	install ratbox-respond ${bindir}
+	install ratbox-makekeypair ${bindir}
 
 clean:
 	${RM} -f ratbox-respond *~
