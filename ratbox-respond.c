@@ -32,6 +32,15 @@
 #include <openssl/pem.h>
 #include <openssl/sha.h>
 #include <unistd.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+
+void nodumps()
+{
+	struct rlimit r;
+	r.rlim_cur = r.rlim_max = 0;
+	setrlimit(RLIMIT_CORE, &r);
+}
 
 static int called_passcb = 0;
 static int pass_cb(char *buf, int size, int rwflag, void *u)
@@ -215,6 +224,8 @@ read_challenge(FILE *f)
 int
 main(int argc, char **argv)
 {
+	nodumps();
+
 	FILE *kfile;
 	RSA *rsa = NULL;
 	SHA_CTX ctx;
@@ -236,7 +247,7 @@ main(int argc, char **argv)
 	}
 
 	OpenSSL_add_all_ciphers();
-	rsa = PEM_read_RSAPrivateKey(kfile, NULL,pass_cb, NULL);
+	rsa = PEM_read_RSAPrivateKey(kfile, NULL, pass_cb, NULL);
 
 	if(!rsa)
 	{
