@@ -55,27 +55,27 @@ static int called_passcb = 0;
 static int pass_cb(char *buf, int size, int rwflag, void *u)
 {
 	int len;
-        char *tmp;
+	char *tmp;
 
 	called_passcb++;
 
-        if(!isatty(fileno(stdin)))
+	if(!isatty(fileno(stdin)))
 	{
-        	if(fgets(buf, size, stdin) == NULL)
-        		return 0;
+		if(fgets(buf, size, stdin) == NULL)
+			return 0;
 		tmp = strpbrk(buf, "\r\n");
 		if(tmp != NULL)
 			*tmp = '\0';
 		return strlen(buf);
-        }
+	}
 	tmp = getpass("Enter passphrase for private key: ");
-        len = strlen(tmp);
-        if (len <= 0) 
+	len = strlen(tmp);
+	if (len <= 0) 
 		return 0;
-        if (len > size)
-        	len = size;
-        memcpy(buf, tmp, len);
-        return len;
+	if (len > size)
+		len = size;
+	memcpy(buf, tmp, len);
+	return len;
 }
 
 
@@ -219,7 +219,7 @@ read_challenge(FILE *f)
 		}
 	}
 
-        fgets((char *)buf, sizeof(buf), stdin);
+	fgets((char *)buf, sizeof(buf), stdin);
 
 	tmp = strpbrk((char *)buf, "\r\n");
 	if(tmp != NULL)
