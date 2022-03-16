@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <openssl/err.h>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
@@ -35,11 +36,19 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
+RSA *rsa = NULL;
+
 void nodumps()
 {
 	struct rlimit r;
 	r.rlim_cur = r.rlim_max = 0;
 	setrlimit(RLIMIT_CORE, &r);
+}
+
+void byebye(int sig)
+{
+	memset(rsa, 0, sizeof rsa);
+	exit(0);
 }
 
 static int called_passcb = 0;
@@ -224,10 +233,17 @@ read_challenge(FILE *f)
 int
 main(int argc, char **argv)
 {
+	struct sigaction act;
+
+	act.sa_handler = byebye;
+
+	sigaction(SIGHUP,  &act, 0);
+	sigaction(SIGINT,  &act, 0);
+	sigaction(SIGTERM, &act, 0);
+
 	nodumps();
 
 	FILE *kfile;
-	RSA *rsa = NULL;
 	SHA_CTX ctx;
 	unsigned char *ptr;
 	unsigned char *ndata, ddata[512];
@@ -283,5 +299,5 @@ main(int argc, char **argv)
 		puts((char *)ndata);
 		fflush(NULL);
 	}
-	return 0;
+	byebye(0);
 }
