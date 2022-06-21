@@ -47,7 +47,7 @@ void nodumps()
 
 void byebye(int sig)
 {
-	memset(rsa, 0, sizeof rsa);
+	RSA_free(rsa);
 	exit(0);
 }
 
