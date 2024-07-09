@@ -234,6 +234,7 @@ int
 main(int argc, char **argv)
 {
 	struct sigaction act;
+	memset(&act, 0, sizeof act);
 
 	act.sa_handler = byebye;
 
