@@ -1,7 +1,9 @@
 respond-agent stays unlocked in memory to allow multiple challenges
 
-!!! DO NOT SUSPEND/HIBERNATE WHILE OPEN !!!
-
+this is based on a weird and old codebase with my probably-insecure
+signal handling logic glued on. if you absolutely must use challenge,
+consider using something safer like jesopo's ircchallenge library:
+https://github.com/jesopo/ircchallenge
 
 - ratbox-respond -
 ------------------
